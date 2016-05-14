@@ -77,23 +77,6 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
             
             (data, response, error) in
             
-            // This is the code run when the network request completes
-            // When the request completes:
-            //
-            // data - contains the data from the request
-            // response - contains the HTTP response code(s)
-            // error - contains any error messages, if applicable
-            
-            print("")
-            print("====== data from the request follows ======")
-            print(data)
-            print("")
-            print("====== response codes from the request follows ======")
-            print(response)
-            print("")
-            print("====== errors from the request follows ======")
-            print(error)
-            
             // Cast the NSURLResponse object into an NSHTTPURLResponse objecct
             if let r = response as? NSHTTPURLResponse {
                 
@@ -114,7 +97,7 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
         }
         
         // Define a URL to retrieve a JSON file from
-        let address : String = "http://www.learnswiftonline.com/Samples/subway.json"
+        let address : String = "http://app.toronto.ca/opendata//ac_locations/locations.json?v=1.00"
         
         // Try to make a URL request object
         if let url = NSURL(string: address) {
