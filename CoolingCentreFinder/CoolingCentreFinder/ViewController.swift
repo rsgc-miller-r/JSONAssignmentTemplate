@@ -7,15 +7,19 @@
 //
 
 import UIKit
-import CoreLocation
+import CoreLocation     // Required to obtain user's location
 
-class ViewController : UIViewController {
+class ViewController : UIViewController, CLLocationManagerDelegate {
     
     // Views that need to be accessible to all methods
     let jsonResult = UILabel()
     
-    // Required to obtain location
-    var locationManager = CLLocationManager()
+    // Required object to obtain user's location
+    var locationManager : CLLocationManager = CLLocationManager()
+    
+    // Will store the user's current location, once it is obtained
+    var latitude : String = ""
+    var longitude : String = ""
     
     // If data is successfully retrieved from the server, we can parse it here
     func parseMyJSON(theData : NSData) {
@@ -43,40 +47,23 @@ class ViewController : UIViewController {
             print("")
             print("Now, add your parsing code here...")
             
-            // If this application is authorized to get current location, get the
-            // location
-            if( CLLocationManager.authorizationStatus() == CLAuthorizationStatus.AuthorizedWhenInUse ||
-                CLLocationManager.authorizationStatus() == CLAuthorizationStatus.AuthorizedAlways)
-            {
-                
-                if let currentLocation = self.locationManager.location {
-                    self.jsonResult.text = "Latitude: \(currentLocation.coordinate.longitude)"
-                    //label2.text = "\(currentLocation.coordinate.latitude)"
-                }
-                
-                
-            }
-            
             // Now we can update the UI
             // (must be done asynchronously)
             dispatch_async(dispatch_get_main_queue()) {
                 
-                //self.jsonResult.text = "parsed JSON should go here"
+                var infoToShow : String = "JSON retrieved\n\n."
+                infoToShow += "Your latitude is: \(self.latitude).\n"
+                infoToShow += "Your longitude is: \(self.longitude).\n"
                 
-                // Create a space in memory to store the current location
-                //var currentLocation = CLLocation()
-                
-                
-                
-                
+                self.jsonResult.text = infoToShow
                 
             }
             
-            
         } catch let error as NSError {
+            
             print ("Failed to load: \(error.localizedDescription)")
+            
         }
-        
         
     }
     
@@ -160,13 +147,28 @@ class ViewController : UIViewController {
     // This is the method that will run as soon as the view controller is created
     override func viewDidLoad() {
         
-        // Set properties on the location manager object
-        locationManager.requestWhenInUseAuthorization()
-        
         // Sub-classes of UIViewController must invoke the superclass method viewDidLoad in their
         // own version of viewDidLoad()
         super.viewDidLoad()
         
+        /*
+         * Location services setup
+         */
+        // What class is the delegate for CLLocationManager? (By passing "self" we are saying it is this view controller)
+        locationManager.delegate = self
+        // Set the level of location accuracy desired
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        // Prompt the user for permission to obtain their location when the app is running
+        // NOTE: Must add these values to the Info.plist file in the project
+        // 	  <key>NSLocationWhenInUseUsageDescription</key>
+        //    <string>The application uses this information to find the cooling centre nearest you.</string>
+        locationManager.requestWhenInUseAuthorization()
+        // Now try to obtain the user's location (this runs aychronously)
+        locationManager.startUpdatingLocation()
+        
+        /*
+         * Define overall visual appearance of the application
+         */
         // Make the view's background be white
         // Trying to match colours expected on iOS
         // http://iosdesign.ivomynttinen.com/#color-palette
@@ -243,5 +245,36 @@ class ViewController : UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    // Required method for CLLocationManagerDelegate
+    // This method runs when the location of the user has been updated.
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        // We now have the user's location, so stop finding their location.
+        // (Looking for current location is a battery drain)
+        self.locationManager.stopUpdatingLocation()
+        
+        // Set the most recent location found
+        let latestLocation = locations.last
+        
+        // Format the current location as strings with four decimal places of accuracy
+        latitude = String(format: "%.4f", latestLocation!.coordinate.latitude)
+        longitude = String(format: "%.4f", latestLocation!.coordinate.longitude)
+        
+        // Report the location
+        print("Location obtained at startup...")
+        print("Latitude: \(latitude)")
+        print("Longitude: \(longitude)")
+    }
+    
+    // Required method for CLLocationManagerDelegate
+    // This method will be run when there is an error determing the user's location
+    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+        
+        // Report the error
+        print("didFailWithError \(error)")
+        
+    }
+    
 
 }

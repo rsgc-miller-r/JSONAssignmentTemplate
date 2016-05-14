@@ -43,5 +43,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>The application uses this information to find the cooling centre nearest you.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>The application uses this information to find the cooling centre nearest you.</string>
 </dict>
 </plist>
