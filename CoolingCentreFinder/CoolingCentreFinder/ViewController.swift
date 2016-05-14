@@ -1,8 +1,13 @@
-//: Playground - noun: a place where people can play
+//
+//  ViewController.swift
+//  CoolingCentreFinder
+//
+//  Created by Russell Gordon on 2016-05-14.
+//  Copyright © 2016 Royal St. George's College. All rights reserved.
+//
 
 import UIKit
 import CoreLocation
-import XCPlayground
 
 class ViewController : UIViewController {
     
@@ -40,8 +45,6 @@ class ViewController : UIViewController {
             
             // If this application is authorized to get current location, get the
             // location
-            CLLocationManager.authorizationStatus() == CLAuthorizationStatus.AuthorizedWhenInUse
-                        CLLocationManager.authorizationStatus() == CLAuthorizationStatus.AuthorizedAlways
             if( CLLocationManager.authorizationStatus() == CLAuthorizationStatus.AuthorizedWhenInUse ||
                 CLLocationManager.authorizationStatus() == CLAuthorizationStatus.AuthorizedAlways)
             {
@@ -59,14 +62,14 @@ class ViewController : UIViewController {
             dispatch_async(dispatch_get_main_queue()) {
                 
                 //self.jsonResult.text = "parsed JSON should go here"
-            
+                
                 // Create a space in memory to store the current location
                 //var currentLocation = CLLocation()
                 
-
                 
                 
-                    
+                
+                
             }
             
             
@@ -79,7 +82,7 @@ class ViewController : UIViewController {
     
     // Set up and begin an asynchronous request for JSON data
     func getMyJSON() {
-
+        
         // Define a completion handler
         // The completion handler is what gets called when this **asynchronous** network request is completed.
         // This is where we'd process the JSON retrieved
@@ -163,12 +166,12 @@ class ViewController : UIViewController {
         // Sub-classes of UIViewController must invoke the superclass method viewDidLoad in their
         // own version of viewDidLoad()
         super.viewDidLoad()
-
+        
         // Make the view's background be white
         // Trying to match colours expected on iOS
         // http://iosdesign.ivomynttinen.com/#color-palette
         view.backgroundColor = UIColor.whiteColor()
-
+        
         /*
          * Further define label that will show JSON data
          */
@@ -185,7 +188,7 @@ class ViewController : UIViewController {
         
         // Add the label to the superview
         view.addSubview(jsonResult)
-
+        
         /*
          * Add a button
          */
@@ -205,7 +208,7 @@ class ViewController : UIViewController {
         
         // Add the button into the super view
         view.addSubview(getData)
-
+        
         /*
          * Layout all the interface elements
          */
@@ -236,9 +239,9 @@ class ViewController : UIViewController {
         
     }
     
-}
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
 
-// Embed the view controller in the live view for the current playground page
-XCPlaygroundPage.currentPage.liveView = ViewController()
-// This playground page needs to continue executing until stopped, since network reqeusts are asynchronous
-XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
+}
