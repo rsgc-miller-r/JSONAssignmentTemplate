@@ -20,6 +20,7 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
     
     // Views that need to be accessible to all methods
     let jsonResult = UILabel()
+    var phoneNumber = UITextView(frame: CGRectMake(0, 0, 300.0, 300.0))
     
     // Required object to obtain user's location
     var locationManager : CLLocationManager = CLLocationManager()
@@ -172,6 +173,7 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
                 }
                 infoToShow += "==== ************************************** ====\n"
                 self.jsonResult.text = infoToShow
+                self.phoneNumber.text = self.closestCoolingCentre["phone"]
                 
             }
             
@@ -274,23 +276,6 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
         view.backgroundColor = UIColor.whiteColor()
         
         /*
-         * Further define label that will show JSON data
-         */
-        
-        // Set the label text and appearance
-        jsonResult.text = "..."
-        jsonResult.font = UIFont.systemFontOfSize(12)
-        jsonResult.numberOfLines = 0   // makes number of lines dynamic
-        // e.g.: multiple lines will show up
-        jsonResult.textAlignment = NSTextAlignment.Left
-        
-        // Required to autolayout this label
-        jsonResult.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Add the label to the superview
-        view.addSubview(jsonResult)
-        
-        /*
          * Add a button
          */
         let getData = UIButton(frame: CGRect(x: 0, y: 0, width: 150, height: 30))
@@ -311,6 +296,41 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
         view.addSubview(getData)
         
         /*
+         * Further define textview that will show phone number for closest cooling station
+         */
+        phoneNumber.text = "Not yet"
+        phoneNumber.font = UIFont.systemFontOfSize(12)
+        phoneNumber.backgroundColor = UIColor.whiteColor()
+        phoneNumber.textAlignment = NSTextAlignment.Left
+        phoneNumber.editable = false
+        phoneNumber.selectable = true
+        phoneNumber.scrollEnabled = false
+        phoneNumber.dataDetectorTypes = UIDataDetectorTypes.PhoneNumber
+        
+        // Required to autolayout this label
+        phoneNumber.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Add the label to the superview
+        view.addSubview(phoneNumber)
+        
+        /*
+         * Further define label that will show JSON data
+         */
+        
+        // Set the label text and appearance
+        jsonResult.text = "..."
+        jsonResult.font = UIFont.systemFontOfSize(12)
+        jsonResult.numberOfLines = 0   // makes number of lines dynamic
+        // e.g.: multiple lines will show up
+        jsonResult.textAlignment = NSTextAlignment.Left
+        
+        // Required to autolayout this label
+        jsonResult.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Add the label to the superview
+        view.addSubview(jsonResult)
+        
+        /*
          * Layout all the interface elements
          */
         
@@ -322,12 +342,14 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
         
         // Create a dictionary of views that will be used in the layout constraints defined below
         let viewsDictionary : [String : AnyObject] = [
+            "getData": getData,
             "title": jsonResult,
-            "getData": getData]
+            "phone": phoneNumber
+            ]
         
         // Define the vertical constraints
         let verticalConstraints = NSLayoutConstraint.constraintsWithVisualFormat(
-            "V:|-50-[getData]-[title]",
+            "V:|-50-[getData]-20-[phone]-20-[title]",
             options: [],
             metrics: nil,
             views: viewsDictionary)
