@@ -131,8 +131,10 @@ class ViewController : UIViewController {
         // own version of viewDidLoad()
         super.viewDidLoad()
 
-        // Make the view's background be gray
-        view.backgroundColor = UIColor.lightGrayColor()
+        // Make the view's background be white
+        // Trying to match colours expected on iOS
+        // http://iosdesign.ivomynttinen.com/#color-palette
+        view.backgroundColor = UIColor.whiteColor()
 
         /*
          * Further define label that will show JSON data
@@ -161,6 +163,9 @@ class ViewController : UIViewController {
         
         // Set the button's title
         getData.setTitle("Get my JSON!", forState: UIControlState.Normal)
+        
+        // Set the button's color
+        getData.setTitleColor(UIColor.init(red: 0.329, green: 0.78, blue: 0.988, alpha: 1), forState: UIControlState.Normal)
         
         // Required to auto layout this button
         getData.translatesAutoresizingMaskIntoConstraints = false
