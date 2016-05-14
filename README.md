@@ -51,3 +51,39 @@ So for example, my JSON data source is:
 http://app.toronto.ca/opendata//ac_locations/locations.json
 
 I added **app.toronto.ca** to the XML above. You would replace this value with the domain of your own JSON data source.
+
+## Obtaining the user's location
+
+There are several steps required to be able to request a user's location in an app.
+
+### Testing with Location Services
+
+Whether running in debug mode on an actual device, or whether testing in the iOS Simulator, location services on iOS needs a "pretend" set of location(s) to return any values.
+
+First, visit [Google Maps](https://maps.google.com/) and search for a location that you want to test with.  Then right-click on the map. Select **What's here**:
+
+![Find what's here at a location](/google-maps-whats-here.png)
+
+Then take note of the longtiude and latitude values given:
+
+![Get longitude and latitude](/longitude-latitude.png)
+
+Next, visit the [GPX POI File Generator website](http://gpx-poi.com).  This will help you create the necessary XML file required by Xcode to simulate a location.  Enter some longitude and latitude values:
+
+![Set longitude and latitude](/enter-long-lat-values.png)
+
+Then download the file with the correct format:
+
+![Get GPX file](/download-file.png)
+
+After the file has downloaded, you may need to rename the file to ensure it's extension is **.gpx** (sometimes a web browser will download the file with a .txt extension).
+
+Now, you can add as many test location(s) as you like to your project in Xcode by editing the scheme for your product:
+
+![Edit application scheme](/edit-scheme.png)
+
+Once inside the product scheme dialog, click on **Run**, then **Options**, then under **Default location** select *Add GPX File to Project...* 
+
+![Add a location](/add-location.png)
+
+Then select the GPX file you just created.
