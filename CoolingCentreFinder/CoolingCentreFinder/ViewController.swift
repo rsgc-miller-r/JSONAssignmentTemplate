@@ -8,6 +8,13 @@
 
 import UIKit
 import CoreLocation     // Required to obtain user's location
+import Foundation
+
+// Allow for degrees <--> radians conversions
+extension Double {
+    var degreesToRadians: Double { return self * M_PI / 180 }
+    var radiansToDegrees: Double { return self * 180 / M_PI }
+}
 
 class ViewController : UIViewController, CLLocationManagerDelegate {
     
@@ -18,8 +25,28 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
     var locationManager : CLLocationManager = CLLocationManager()
     
     // Will store the user's current location, once it is obtained
-    var latitude : String = ""
-    var longitude : String = ""
+    var latitude : String = ""          // Required by CLLocationManagerDelegate
+    var longitude : String = ""         // Required by CLLocationManagerDelegate
+    var latitudeAsDouble : Double = 0.0
+    var longitudeAsDouble : Double = 0.0
+    
+    // Average radius of Earth
+    let averageEarthRadius : Double = 6373
+    
+    // Determine the distance between two positions by latitude and longitude
+    func currentLocationDistanceTo(otherLatitude otherLatitude : Double, otherLongitude : Double) -> Double {
+        
+        // An implementation of the Haversine formula for finding distances between two co-ordinates
+        // See: http://andrew.hedges.name/experiments/haversine/
+        let longitudeDifference = otherLongitude - longitudeAsDouble
+        let latitudeDifference = otherLatitude - latitudeAsDouble
+        let a : Double = pow(sin( latitudeDifference.degreesToRadians / 2), 2) + cos(latitudeAsDouble.degreesToRadians) * cos(otherLatitude.degreesToRadians) * pow(sin(longitudeDifference.degreesToRadians / 2), 2)
+        let c : Double = 2 * atan2( sqrt(a), sqrt(1 - a) )
+        let d : Double = averageEarthRadius * c
+        
+        return d
+        
+    }
     
     // If data is successfully retrieved from the server, we can parse it here
     func parseMyJSON(theData : NSData) {
@@ -62,6 +89,9 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
                             return
                     }
                     
+                    // Get the distance of this centre from my current location
+                    let distanceFromMe : Double = currentLocationDistanceTo(otherLatitude: centreLatitude, otherLongitude: centreLongitude)
+
                     // Now we have the current longitude and latitude of this centre as double values
                     if (centreDescription == "Library") {
                         print("==== information for \(centreName) \(centreDescription)")
@@ -70,7 +100,9 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
                     }
                     print("Longitude: \(centreLongitude)")
                     print("Latitude: \(centreLatitude)")
+                    print("Distance from me: \(distanceFromMe)")
                     print("====")
+                    
                     
                 }
                 
@@ -274,10 +306,14 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
         latitude = String(format: "%.4f", latestLocation!.coordinate.latitude)
         longitude = String(format: "%.4f", latestLocation!.coordinate.longitude)
         
+        // Save the current location as a Double
+        latitudeAsDouble = Double(latestLocation!.coordinate.latitude)
+        longitudeAsDouble = Double(latestLocation!.coordinate.longitude)
+        
         // Report the location
         print("Location obtained at startup...")
-        print("Latitude: \(latitude)")
-        print("Longitude: \(longitude)")
+        print("Latitude: \(latitudeAsDouble)")
+        print("Longitude: \(longitudeAsDouble)")
     }
     
     // Required method for CLLocationManagerDelegate
