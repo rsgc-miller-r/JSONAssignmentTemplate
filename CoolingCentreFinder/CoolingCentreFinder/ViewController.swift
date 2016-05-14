@@ -51,7 +51,7 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
             // (must be done asynchronously)
             dispatch_async(dispatch_get_main_queue()) {
                 
-                var infoToShow : String = "JSON retrieved\n\n."
+                var infoToShow : String = "JSON retrieved.\n\n"
                 infoToShow += "Your latitude is: \(self.latitude).\n"
                 infoToShow += "Your longitude is: \(self.longitude).\n"
                 
@@ -183,7 +183,7 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
         jsonResult.font = UIFont.systemFontOfSize(12)
         jsonResult.numberOfLines = 0   // makes number of lines dynamic
         // e.g.: multiple lines will show up
-        jsonResult.textAlignment = NSTextAlignment.Center
+        jsonResult.textAlignment = NSTextAlignment.Left
         
         // Required to autolayout this label
         jsonResult.translatesAutoresizingMaskIntoConstraints = false
