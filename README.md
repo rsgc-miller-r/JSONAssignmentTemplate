@@ -87,3 +87,21 @@ Once inside the product scheme dialog, click on **Run**, then **Options**, then 
 ![Add a location](/add-location.png)
 
 Then select the GPX file you just created.
+
+## Getting permission to find a user's location
+
+Your app will need to request a user's location. Permission is required.
+
+In order to show the prompt to ask for permission to find a user's location, you must define custom messages that will be shown by your app in the **Info.plist** file.
+
+Edit the *Info.plist* file like so:
+
+![Edit info.plist as source code](/edit-info-plist.png)
+
+Then add the following XML to the bottom of the file (change the messages as appropriate for your application):
+
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>The application uses this information to find the cooling centre nearest you.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>The application uses this information to find the cooling centre nearest you.</string>
+
