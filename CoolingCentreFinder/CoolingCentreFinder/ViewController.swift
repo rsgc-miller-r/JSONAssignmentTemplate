@@ -289,26 +289,6 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
         view.backgroundColor = UIColor.whiteColor()
         
         /*
-         * Add a button
-         */
-        let getData = UIButton(frame: CGRect(x: 0, y: 0, width: 150, height: 30))
-        
-        // Make the button, when touched, run the calculate method
-        getData.addTarget(self, action: #selector(ViewController.getMyJSON), forControlEvents: UIControlEvents.TouchUpInside)
-        
-        // Set the button's title
-        getData.setTitle("Get my JSON!", forState: UIControlState.Normal)
-        
-        // Set the button's color
-        getData.setTitleColor(UIColor.init(red: 0.329, green: 0.78, blue: 0.988, alpha: 1), forState: UIControlState.Normal)
-        
-        // Required to auto layout this button
-        getData.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Add the button into the super view
-        view.addSubview(getData)
-        
-        /*
          * Further define textview that will show phone number for closest cooling station
          */
         phoneNumber.text = "Not yet"
@@ -374,7 +354,6 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
         
         // Create a dictionary of views that will be used in the layout constraints defined below
         let viewsDictionary : [String : AnyObject] = [
-            "getData": getData,
             "title": jsonResult,
             "phone": phoneNumber,
             "address": address
@@ -382,7 +361,7 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
         
         // Define the vertical constraints
         let verticalConstraints = NSLayoutConstraint.constraintsWithVisualFormat(
-            "V:|-50-[getData]-20-[address]-20-[phone]-20-[title]",
+            "V:|-50-[address]-20-[phone]-20-[title]",
             options: [],
             metrics: nil,
             views: viewsDictionary)
@@ -390,8 +369,21 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
         // Add the vertical constraints to the list of constraints
         allConstraints += verticalConstraints
         
+        // Define the horizontal constraints
+        let horizontalConstraints = NSLayoutConstraint.constraintsWithVisualFormat(
+            "H:|-50-[title]",
+            options: [],
+            metrics: nil,
+            views: viewsDictionary)
+        
+        // Add the vertical constraints to the list of constraints
+        allConstraints += horizontalConstraints
+
         // Activate all defined constraints
         NSLayoutConstraint.activateConstraints(allConstraints)
+        
+        // Actually retrieve the cooling centre data
+        getMyJSON()
         
     }
     
