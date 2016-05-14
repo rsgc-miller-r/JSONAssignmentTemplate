@@ -88,7 +88,7 @@ Once inside the product scheme dialog, click on **Run**, then **Options**, then 
 
 Then select the GPX file you just created.
 
-## Getting permission to find a user's location
+### Getting permission to find a user's location
 
 Your app will need to request a user's location. Permission is required.
 
@@ -105,3 +105,18 @@ Then add the following XML to the bottom of the file (change the messages as app
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>The application uses this information to find the cooling centre nearest you.</string>
 
+### Code changes required
+
+To obtain a user's location, the view controller [must implement the **CLLocationManagerDelegate** protocol](https://github.com/rgordonatrsgc/JSONAssignmentTemplate/blob/59dd56282a16773e76f447538cc194c09ecd9bce/CoolingCentreFinder/CoolingCentreFinder/ViewController.swift#L12).  This just means that your view controller "promises" to provide certain methods that will be called by iOS when it attempts to find the user's location.
+
+Next, you must [create an object that will be used to get the user's location](https://github.com/rgordonatrsgc/JSONAssignmentTemplate/blob/59dd56282a16773e76f447538cc194c09ecd9bce/CoolingCentreFinder/CoolingCentreFinder/ViewController.swift#L17-L18).
+
+After this, it is convenient to [declare some global variables inside the view controller](https://github.com/rgordonatrsgc/JSONAssignmentTemplate/blob/59dd56282a16773e76f447538cc194c09ecd9bce/CoolingCentreFinder/CoolingCentreFinder/ViewController.swift#L20-L22) that will store the latitude and longitude the you retrieve.
+
+At the start of **viewDidLoad** in the view controller, you [set some options for finding the user's location](https://github.com/rgordonatrsgc/JSONAssignmentTemplate/blob/59dd56282a16773e76f447538cc194c09ecd9bce/CoolingCentreFinder/CoolingCentreFinder/ViewController.swift#L154-L167), and then try to do so.
+
+[If the user's location can be determined, this method will run](https://github.com/rgordonatrsgc/JSONAssignmentTemplate/blob/59dd56282a16773e76f447538cc194c09ecd9bce/CoolingCentreFinder/CoolingCentreFinder/ViewController.swift#L249-L268).
+
+[If something goes wrong, this method will run](https://github.com/rgordonatrsgc/JSONAssignmentTemplate/blob/59dd56282a16773e76f447538cc194c09ecd9bce/CoolingCentreFinder/CoolingCentreFinder/ViewController.swift#L270-L277).
+
+Finally, [this is where the UI is updated in the application](https://github.com/rgordonatrsgc/JSONAssignmentTemplate/blob/59dd56282a16773e76f447538cc194c09ecd9bce/CoolingCentreFinder/CoolingCentreFinder/ViewController.swift#L50-L60) – this is simply printing out the contents of the global variables we created before, and sticking them in a label.
