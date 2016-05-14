@@ -21,6 +21,7 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
     // Views that need to be accessible to all methods
     let jsonResult = UILabel()
     var phoneNumber = UITextView(frame: CGRectMake(0, 0, 300.0, 300.0))
+    var address = UITextView(frame: CGRectMake(0, 0, 300.0, 300.0))
     
     // Required object to obtain user's location
     var locationManager : CLLocationManager = CLLocationManager()
@@ -172,7 +173,19 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
                     infoToShow += "\(key): \(value)\n"
                 }
                 infoToShow += "==== ************************************** ====\n"
+                
+                // Set the closest cooling station
                 self.jsonResult.text = infoToShow
+
+                // Set the address of the closest cooling station so that it is clickable
+                guard var fullAddress = self.closestCoolingCentre["address"] else {
+                    print("Could not set the address.")
+                    return
+                }
+                fullAddress += ", Toronto, Ontario"
+                self.address.text = fullAddress
+                
+                // Set the phone number of the closest cooling station so that it is clickable
                 self.phoneNumber.text = self.closestCoolingCentre["phone"]
                 
             }
@@ -312,7 +325,26 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
         
         // Add the label to the superview
         view.addSubview(phoneNumber)
+
         
+        /*
+         * Further define textview that will show phone number for closest cooling station
+         */
+        address.text = "Not yet"
+        address.font = UIFont.systemFontOfSize(12)
+        address.backgroundColor = UIColor.whiteColor()
+        address.textAlignment = NSTextAlignment.Left
+        address.editable = false
+        address.selectable = true
+        address.scrollEnabled = false
+        address.dataDetectorTypes = UIDataDetectorTypes.Address
+        
+        // Required to autolayout this label
+        address.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Add the label to the superview
+        view.addSubview(address)
+
         /*
          * Further define label that will show JSON data
          */
@@ -344,12 +376,13 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
         let viewsDictionary : [String : AnyObject] = [
             "getData": getData,
             "title": jsonResult,
-            "phone": phoneNumber
+            "phone": phoneNumber,
+            "address": address
             ]
         
         // Define the vertical constraints
         let verticalConstraints = NSLayoutConstraint.constraintsWithVisualFormat(
-            "V:|-50-[getData]-20-[phone]-20-[title]",
+            "V:|-50-[getData]-20-[address]-20-[phone]-20-[title]",
             options: [],
             metrics: nil,
             views: viewsDictionary)
