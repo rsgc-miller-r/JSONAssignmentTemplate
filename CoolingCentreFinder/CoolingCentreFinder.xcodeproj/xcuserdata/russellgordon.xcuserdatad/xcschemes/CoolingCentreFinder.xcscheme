@@ -64,7 +64,7 @@
       <AdditionalOptions>
       </AdditionalOptions>
       <LocationScenarioReference
-         identifier = "../../RSGC.gpx"
+         identifier = "../../RogersCentre.gpx"
          referenceType = "0">
       </LocationScenarioReference>
    </LaunchAction>

@@ -33,6 +33,12 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
     // Average radius of Earth
     let averageEarthRadius : Double = 6373
     
+    // Shortest distance from my current location (start at "really far away")
+    var shortestCoolingCentreDistance : Double = Double.infinity
+    
+    // Information for the cooling centre closest to me
+    var closestCoolingCentre : [String : String] = [:]
+    
     // Determine the distance between two positions by latitude and longitude
     func currentLocationDistanceTo(otherLatitude otherLatitude : Double, otherLongitude : Double) -> Double {
         
@@ -82,41 +88,89 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
                     // to the current location
                     guard let centreLongitude : Double = thisCentre["lon"] as? Double,
                         let centreLatitude : Double = thisCentre["lat"]  as? Double,
-                        let centreName : String = thisCentre["locationName"] as? String,
+                        var centreName : String = thisCentre["locationName"] as? String,
                         let centreDescription : String = thisCentre["locationDesc"] as? String
                         else {
                             print("Problem getting details for a centre")
                             return
                     }
                     
+                    // Fix up the centre's name
+                    if centreDescription == "Library" {
+                        centreName += " "
+                        centreName += centreDescription
+                    }
+                    
+                    
                     // Get the distance of this centre from my current location
                     let distanceFromMe : Double = currentLocationDistanceTo(otherLatitude: centreLatitude, otherLongitude: centreLongitude)
+                    
+                    // See if this is the closest
+                    if distanceFromMe < shortestCoolingCentreDistance {
+                        
+                        // Save the closest centre
+                        shortestCoolingCentreDistance = distanceFromMe
+                        
+                        // Save closest centre basic details
+                        closestCoolingCentre["name"] = centreName
+                        closestCoolingCentre["latitude"] = String(centreLatitude)
+                        closestCoolingCentre["longitude"] = String(centreLongitude)
+
+                        // Debug output
+                        print("==== ***** NEW CLOSEST LOCATION ***** ====")
+                        for (key, value) in closestCoolingCentre {
+                            print("\(key): \(value)")
+                        }
+                        print("==== ******************************** ====")
+
+                        // Get further details for the closest centre
+                        guard let centreAddress : String = thisCentre["address"] as? String,
+                        //let centreNotes : String = thisCentre["notes"] as? String,
+                        var centrePhone : String = thisCentre["phone"] as? String
+                            else {
+                                print("Problem getting further details for the closest centre")
+                                return
+                        }
+                        
+                        // Fix up the centre's phone number
+                        if centrePhone == "<null>" {
+                            centrePhone = ""
+                        }
+                        
+                        // Save in a global variable (dictionary) that tracks the details of the closest centre
+                        //closestCoolingCentre["notes"] = centreNotes
+                        closestCoolingCentre["phone"] = centrePhone
+                        closestCoolingCentre["address"] = centreAddress
+                        
+                    }
 
                     // Now we have the current longitude and latitude of this centre as double values
-                    if (centreDescription == "Library") {
-                        print("==== information for \(centreName) \(centreDescription)")
-                    } else {
-                        print("==== information for \(centreName)")
-                    }
+                    print("==== information for \(centreName) ==== ")
                     print("Longitude: \(centreLongitude)")
                     print("Latitude: \(centreLatitude)")
                     print("Distance from me: \(distanceFromMe)")
                     print("====")
                     
-                    
                 }
                 
             }
             
+            // Print out the closest cooling centre details
+            print("==== ***** THE CLOSEST LOCATION IS... ***** ====")
+            for (key, value) in closestCoolingCentre {
+                print("\(key): \(value)")
+            }
+            print("==== ************************************** ====")
             
             // Now we can update the UI
             // (must be done asynchronously)
             dispatch_async(dispatch_get_main_queue()) {
                 
-                var infoToShow : String = "JSON retrieved.\n\n"
-                infoToShow += "Your latitude is: \(self.latitude).\n"
-                infoToShow += "Your longitude is: \(self.longitude).\n"
-                
+                var infoToShow : String = "==== ***** THE CLOSEST LOCATION IS... ***** ====\n"
+                for (key, value) in self.closestCoolingCentre {
+                    infoToShow += "\(key): \(value)\n"
+                }
+                infoToShow += "==== ************************************** ====\n"
                 self.jsonResult.text = infoToShow
                 
             }
