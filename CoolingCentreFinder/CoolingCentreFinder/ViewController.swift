@@ -36,16 +36,46 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
             // Source JSON is here:
             // http://www.learnswiftonline.com/Samples/subway.json
             //
-            let json = try NSJSONSerialization.JSONObjectWithData(theData, options: NSJSONReadingOptions.AllowFragments) as! AnyObject
+            let allCoolingCentres = try NSJSONSerialization.JSONObjectWithData(theData, options: NSJSONReadingOptions.AllowFragments) as! [AnyObject]
             
-            // Print retrieved JSON
-            print("")
-            print("====== the retrieved JSON is as follows ======")
-            print(json)
+            // Print all the JSON
+            print(allCoolingCentres)
             
-            // Now we can parse this...
-            print("")
-            print("Now, add your parsing code here...")
+            // Iterate over each object in the JSON
+            // Cast it to a dictionary
+            // Find what cooling centre is closest to my current location
+            for eachCoolingCentre in allCoolingCentres {
+                
+                // Try to cast the current anyObject in the array of AnyObjects to a dictionary
+                if let thisCentre = eachCoolingCentre as? [String : AnyObject] {
+                    
+                    // A successful cast...
+                    //
+                    // Now try casting key values to see if this cooling centre is closest
+                    // to the current location
+                    guard let centreLongitude : Double = thisCentre["lon"] as? Double,
+                        let centreLatitude : Double = thisCentre["lat"]  as? Double,
+                        let centreName : String = thisCentre["locationName"] as? String,
+                        let centreDescription : String = thisCentre["locationDesc"] as? String
+                        else {
+                            print("Problem getting details for a centre")
+                            return
+                    }
+                    
+                    // Now we have the current longitude and latitude of this centre as double values
+                    if (centreDescription == "Library") {
+                        print("==== information for \(centreName) \(centreDescription)")
+                    } else {
+                        print("==== information for \(centreName)")
+                    }
+                    print("Longitude: \(centreLongitude)")
+                    print("Latitude: \(centreLatitude)")
+                    print("====")
+                    
+                }
+                
+            }
+            
             
             // Now we can update the UI
             // (must be done asynchronously)

@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CoolingCentreFinder/ViewController.swift"
-            timestampString = "484937542.710595"
+            timestampString = "484944523.540979"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "308"
-            endingLineNumber = "308"
+            startingLineNumber = "339"
+            endingLineNumber = "339"
             landmarkName = "ViewController"
             landmarkType = "3">
          </BreakpointContent>
