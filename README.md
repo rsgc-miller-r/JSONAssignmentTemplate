@@ -22,6 +22,12 @@ The direct JSON data source being utilized is available here:
 
 http://app.toronto.ca/opendata//ac_locations/locations.json
 
+## Assets used in this project
+
+For the app icon, I obtained the [sun image](https://pixabay.com/static/uploads/photo/2014/04/02/10/19/star-303454_960_720.png) from [Pixabay](https://pixabay.com).
+
+I obtained the [CN Tower image](http://www.flaticon.com/free-icon/cn-tower_1162#term=cN%20tower&page=1&position=2) from FlatIcon. Specifically, the icon was made by author [Freepik](http://www.freepik.com/) from [FlatIcon](https://www.flaticon.com ).
+
 ## Obtaining JSON from an insecure (HTTP) source
 
 When you run an application in a full-fledged iOS application, default security settings disallow connections to insecure web hosts (HTTP vs. HTTPS).
