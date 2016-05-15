@@ -16,12 +16,44 @@ extension Double {
     var radiansToDegrees: Double { return self * 180 / M_PI }
 }
 
+// An extension is a Swift language construct that, as the name implies,
+// allows you to extend, or add functionality to, an existing type or class.
+// In this case, we are adding functionality to the UIView class.
+//
+// Note that UIView class is a super-class for all the UI elements we are using
+// here (UILabel, UITextField, UIButton).
+// So if we write an extension for UIView, all the sub-classes of UIView have this
+// new functionality as well.
+extension UIView {
+    
+    // A convenience function that saves us directly invoking the rather verbose
+    // NSLayoutConstraint initializer on each and every object in the interface.
+    func centerHorizontallyInSuperview(){
+        let c: NSLayoutConstraint = NSLayoutConstraint(item: self,
+                                                       attribute: NSLayoutAttribute.CenterX,
+                                                       relatedBy: NSLayoutRelation.Equal,
+                                                       toItem: self.superview,
+                                                       attribute: NSLayoutAttribute.CenterX,
+                                                       multiplier:1,
+                                                       constant: 0)
+        
+        // Add this constraint to the superview
+        self.superview?.addConstraint(c)
+        
+    }
+    
+}
+
 class ViewController : UIViewController, CLLocationManagerDelegate {
+    
+    // Whether to show debug output from JSON retrieval
+    var debugOutput : Bool = false
     
     // Views that need to be accessible to all methods
     let jsonResult = UILabel()
     var phoneNumber = UITextView(frame: CGRectMake(0, 0, 300.0, 300.0))
     var address = UITextView(frame: CGRectMake(0, 0, 300.0, 300.0))
+    let stationName = UILabel()
     
     // Required object to obtain user's location
     var locationManager : CLLocationManager = CLLocationManager()
@@ -175,8 +207,18 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
                 infoToShow += "==== ************************************** ====\n"
                 
                 // Set the closest cooling station
-                self.jsonResult.text = infoToShow
+                if self.debugOutput == true {
+                    self.jsonResult.text = infoToShow
+                }
 
+                // Set the name of the closest cooling station
+                guard let coolingCentreName = self.closestCoolingCentre["name"] else {
+                    print("Could not set the cooling centre name.")
+                    return
+                }
+                self.stationName.text = coolingCentreName
+                self.stationName.textColor = UIColor.blackColor()
+                
                 // Set the address of the closest cooling station so that it is clickable
                 guard var fullAddress = self.closestCoolingCentre["address"] else {
                     print("Could not set the address.")
@@ -184,9 +226,11 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
                 }
                 fullAddress += ", Toronto, Ontario"
                 self.address.text = fullAddress
+                self.address.textColor = UIColor.blackColor()
                 
                 // Set the phone number of the closest cooling station so that it is clickable
                 self.phoneNumber.text = self.closestCoolingCentre["phone"]
+                self.phoneNumber.textColor = UIColor.blackColor()
                 
             }
             
@@ -289,10 +333,59 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
         view.backgroundColor = UIColor.whiteColor()
         
         /*
+         * Define app title label
+         */
+        
+        // Set the label text and appearance
+        let appTitle = UILabel()
+        appTitle.font = UIFont.systemFontOfSize(48)
+        appTitle.text = "Stay Cool T.O."
+        appTitle.textAlignment = NSTextAlignment.Center
+        
+        // Required to autolayout this label
+        appTitle.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Add the label to the superview
+        view.addSubview(appTitle)
+        
+        /*
+         * Define preamble label
+         */
+        
+        // Set the label text and appearance
+        let preamble = UILabel()
+        preamble.font = UIFont.systemFontOfSize(24)
+        preamble.text = "Nearest cooling station is"
+        preamble.textAlignment = NSTextAlignment.Center
+        preamble.numberOfLines = 0   // makes number of lines dynamic
+
+        // Required to autolayout this label
+        preamble.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Add the label to the superview
+        view.addSubview(preamble)
+
+        /*
+         * Define preamble label
+         */
+        
+        // Set the label text and appearance
+        stationName.font = UIFont.systemFontOfSize(18)
+        stationName.text = "loading"
+        stationName.textColor = UIColor.grayColor()
+        stationName.textAlignment = NSTextAlignment.Center
+        stationName.numberOfLines = 0   // makes number of lines dynamic
+        
+        // Required to autolayout this label
+        stationName.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Add the label to the superview
+        view.addSubview(stationName)
+
+        /*
          * Further define textview that will show phone number for closest cooling station
          */
-        phoneNumber.text = "Not yet"
-        phoneNumber.font = UIFont.systemFontOfSize(12)
+        phoneNumber.font = UIFont.systemFontOfSize(16)
         phoneNumber.backgroundColor = UIColor.whiteColor()
         phoneNumber.textAlignment = NSTextAlignment.Left
         phoneNumber.editable = false
@@ -305,13 +398,12 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
         
         // Add the label to the superview
         view.addSubview(phoneNumber)
-
         
         /*
          * Further define textview that will show phone number for closest cooling station
          */
-        address.text = "Not yet"
-        address.font = UIFont.systemFontOfSize(12)
+        address.text = ""
+        address.font = UIFont.systemFontOfSize(16)
         address.backgroundColor = UIColor.whiteColor()
         address.textAlignment = NSTextAlignment.Left
         address.editable = false
@@ -330,7 +422,7 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
          */
         
         // Set the label text and appearance
-        jsonResult.text = "..."
+        jsonResult.text = ""
         jsonResult.font = UIFont.systemFontOfSize(12)
         jsonResult.numberOfLines = 0   // makes number of lines dynamic
         // e.g.: multiple lines will show up
@@ -354,14 +446,17 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
         
         // Create a dictionary of views that will be used in the layout constraints defined below
         let viewsDictionary : [String : AnyObject] = [
-            "title": jsonResult,
+            "title": appTitle,
+            "preamble": preamble,
+            "name": stationName,
             "phone": phoneNumber,
-            "address": address
+            "address": address,
+            "result": jsonResult
             ]
         
         // Define the vertical constraints
         let verticalConstraints = NSLayoutConstraint.constraintsWithVisualFormat(
-            "V:|-50-[address]-20-[phone]-20-[title]",
+            "V:|-60-[title]-40-[preamble]-30-[name]-15-[address]-[phone]-20-[result]",
             options: [],
             metrics: nil,
             views: viewsDictionary)
@@ -369,21 +464,16 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
         // Add the vertical constraints to the list of constraints
         allConstraints += verticalConstraints
         
-        // Define the horizontal constraints
-        let horizontalConstraints = NSLayoutConstraint.constraintsWithVisualFormat(
-            "H:|-50-[title]",
-            options: [],
-            metrics: nil,
-            views: viewsDictionary)
-        
-        // Add the vertical constraints to the list of constraints
-        allConstraints += horizontalConstraints
+        // Centre all views in the superview
+        appTitle.centerHorizontallyInSuperview()
+        preamble.centerHorizontallyInSuperview()
+        stationName.centerHorizontallyInSuperview()
+        jsonResult.centerHorizontallyInSuperview()
+        phoneNumber.centerHorizontallyInSuperview()
+        address.centerHorizontallyInSuperview()
 
         // Activate all defined constraints
         NSLayoutConstraint.activateConstraints(allConstraints)
-        
-        // Actually retrieve the cooling centre data
-        getMyJSON()
         
     }
     
@@ -415,6 +505,9 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
         print("Location obtained at startup...")
         print("Latitude: \(latitudeAsDouble)")
         print("Longitude: \(longitudeAsDouble)")
+        
+        // Now actually retrieve the cooling centre data
+        getMyJSON()
     }
     
     // Required method for CLLocationManagerDelegate
