@@ -16,6 +16,7 @@
 		81C019921CE7B0870033EAD2 /* RSGC.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 81C019911CE7B0870033EAD2 /* RSGC.gpx */; };
 		81C019941CE7BBCA0033EAD2 /* RogersCentre.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 81C019931CE7BBCA0033EAD2 /* RogersCentre.gpx */; };
 		81C019961CE80BB90033EAD2 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81C019951CE80BB80033EAD2 /* MapKit.framework */; };
+		81C019981CE826180033EAD2 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 81C019971CE826180033EAD2 /* Media.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		81C019911CE7B0870033EAD2 /* RSGC.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = RSGC.gpx; sourceTree = "<group>"; };
 		81C019931CE7BBCA0033EAD2 /* RogersCentre.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = RogersCentre.gpx; sourceTree = "<group>"; };
 		81C019951CE80BB80033EAD2 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		81C019971CE826180033EAD2 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +71,7 @@
 			children = (
 				81C0197D1CE740580033EAD2 /* AppDelegate.swift */,
 				81C0197F1CE740580033EAD2 /* ViewController.swift */,
+				81C019971CE826180033EAD2 /* Media.xcassets */,
 				81C019811CE740580033EAD2 /* Main.storyboard */,
 				81C019841CE740580033EAD2 /* Assets.xcassets */,
 				81C019861CE740580033EAD2 /* LaunchScreen.storyboard */,
@@ -143,6 +146,7 @@
 			files = (
 				81C019881CE740580033EAD2 /* LaunchScreen.storyboard in Resources */,
 				81C019901CE74A0D0033EAD2 /* default.gpx in Resources */,
+				81C019981CE826180033EAD2 /* Media.xcassets in Resources */,
 				81C019921CE7B0870033EAD2 /* RSGC.gpx in Resources */,
 				81C019851CE740580033EAD2 /* Assets.xcassets in Resources */,
 				81C019941CE7BBCA0033EAD2 /* RogersCentre.gpx in Resources */,
