@@ -15,6 +15,7 @@
 		81C019901CE74A0D0033EAD2 /* default.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 81C0198F1CE74A0D0033EAD2 /* default.gpx */; };
 		81C019921CE7B0870033EAD2 /* RSGC.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 81C019911CE7B0870033EAD2 /* RSGC.gpx */; };
 		81C019941CE7BBCA0033EAD2 /* RogersCentre.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 81C019931CE7BBCA0033EAD2 /* RogersCentre.gpx */; };
+		81C019961CE80BB90033EAD2 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81C019951CE80BB80033EAD2 /* MapKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		81C0198F1CE74A0D0033EAD2 /* default.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = default.gpx; sourceTree = "<group>"; };
 		81C019911CE7B0870033EAD2 /* RSGC.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = RSGC.gpx; sourceTree = "<group>"; };
 		81C019931CE7BBCA0033EAD2 /* RogersCentre.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = RogersCentre.gpx; sourceTree = "<group>"; };
+		81C019951CE80BB80033EAD2 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81C019961CE80BB90033EAD2 /* MapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,6 +47,7 @@
 		81C019711CE740580033EAD2 = {
 			isa = PBXGroup;
 			children = (
+				81C019951CE80BB80033EAD2 /* MapKit.framework */,
 				81C019931CE7BBCA0033EAD2 /* RogersCentre.gpx */,
 				81C019911CE7B0870033EAD2 /* RSGC.gpx */,
 				81C0198F1CE74A0D0033EAD2 /* default.gpx */,
@@ -106,6 +110,11 @@
 					81C019791CE740580033EAD2 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = F7KEGER2F9;
+						SystemCapabilities = {
+							com.apple.Maps.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};

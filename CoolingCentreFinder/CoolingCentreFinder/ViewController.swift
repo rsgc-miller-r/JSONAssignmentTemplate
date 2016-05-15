@@ -9,6 +9,7 @@
 import UIKit
 import CoreLocation     // Required to obtain user's location
 import Foundation
+import MapKit
 
 // Allow for degrees <--> radians conversions
 extension Double {
@@ -44,7 +45,7 @@ extension UIView {
     
 }
 
-class ViewController : UIViewController, CLLocationManagerDelegate {
+class ViewController : UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
     // Whether to show debug output from JSON retrieval
     var debugOutput : Bool = false
@@ -54,6 +55,7 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
     var phoneNumber = UITextView(frame: CGRectMake(0, 0, 300.0, 300.0))
     var address = UITextView(frame: CGRectMake(0, 0, 300.0, 300.0))
     let stationName = UILabel()
+    var map : MKMapView!
     
     // Required object to obtain user's location
     var locationManager : CLLocationManager = CLLocationManager()
@@ -231,6 +233,17 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
                 // Set the phone number of the closest cooling station so that it is clickable
                 self.phoneNumber.text = self.closestCoolingCentre["phone"]
                 self.phoneNumber.textColor = UIColor.blackColor()
+                
+                // Set up the map to show the closest cooling centre
+                guard let coolingCentreLatitude = CLLocationDegrees(self.closestCoolingCentre["latitude"]!),
+                    let coolingCentreLongitude = CLLocationDegrees(self.closestCoolingCentre["longitude"]!) else {
+                        print("Problem setting up the map.")
+                        return
+                }
+                let coolingCentreCoordinates = CLLocationCoordinate2D(latitude: coolingCentreLatitude, longitude: coolingCentreLongitude + 0.001)
+                self.map.setCenterCoordinate(coolingCentreCoordinates, animated: true)
+                let region = MKCoordinateRegion(center: coolingCentreCoordinates, span: MKCoordinateSpan(latitudeDelta: 0.002, longitudeDelta: 0.002))
+                self.map.setRegion(region, animated: true)
                 
             }
             
@@ -418,6 +431,18 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
         view.addSubview(address)
 
         /*
+         * Further define map that will show where the closest cooling centre is
+         */
+        let mapContainer : UIView = UIView(frame: CGRectMake(0, 0, 640, 350))
+        mapContainer.translatesAutoresizingMaskIntoConstraints = false
+        map = MKMapView(frame: CGRectMake(0, 0, 640, 350))
+        map.mapType = .Standard
+        map.delegate = self
+        //map.translatesAutoresizingMaskIntoConstraints = false
+        mapContainer.addSubview(map)
+        view.addSubview(mapContainer)
+        
+        /*
          * Further define label that will show JSON data
          */
         
@@ -451,12 +476,13 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
             "name": stationName,
             "phone": phoneNumber,
             "address": address,
+            "theMap": mapContainer,
             "result": jsonResult
             ]
         
         // Define the vertical constraints
         let verticalConstraints = NSLayoutConstraint.constraintsWithVisualFormat(
-            "V:|-60-[title]-40-[preamble]-30-[name]-15-[address]-[phone]-20-[result]",
+            "V:|-30-[title]-10-[preamble]-15-[name]-[address][phone]-20-[theMap]-[result]",
             options: [],
             metrics: nil,
             views: viewsDictionary)
@@ -468,9 +494,10 @@ class ViewController : UIViewController, CLLocationManagerDelegate {
         appTitle.centerHorizontallyInSuperview()
         preamble.centerHorizontallyInSuperview()
         stationName.centerHorizontallyInSuperview()
-        jsonResult.centerHorizontallyInSuperview()
         phoneNumber.centerHorizontallyInSuperview()
         address.centerHorizontallyInSuperview()
+        map.centerHorizontallyInSuperview()
+        jsonResult.centerHorizontallyInSuperview()
 
         // Activate all defined constraints
         NSLayoutConstraint.activateConstraints(allConstraints)
