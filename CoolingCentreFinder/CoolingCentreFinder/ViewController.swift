@@ -151,18 +151,18 @@ class ViewController : UIViewController, CLLocationManagerDelegate, MKMapViewDel
                         closestCoolingCentre["name"] = centreName
                         closestCoolingCentre["latitude"] = String(centreLatitude)
                         closestCoolingCentre["longitude"] = String(centreLongitude)
-
+                        
                         // Debug output
                         print("==== ***** NEW CLOSEST LOCATION ***** ====")
                         for (key, value) in closestCoolingCentre {
                             print("\(key): \(value)")
                         }
                         print("==== ******************************** ====")
-
+                        
                         // Get further details for the closest centre
                         guard let centreAddress : String = thisCentre["address"] as? String,
-                        //let centreNotes : String = thisCentre["notes"] as? String,
-                        var centrePhone : String = thisCentre["phone"] as? String
+                            //let centreNotes : String = thisCentre["notes"] as? String,
+                            var centrePhone : String = thisCentre["phone"] as? String
                             else {
                                 print("Problem getting further details for the closest centre")
                                 return
@@ -179,7 +179,7 @@ class ViewController : UIViewController, CLLocationManagerDelegate, MKMapViewDel
                         closestCoolingCentre["address"] = centreAddress
                         
                     }
-
+                    
                     // Now we have the current longitude and latitude of this centre as double values
                     print("==== information for \(centreName) ==== ")
                     print("Longitude: \(centreLongitude)")
@@ -212,7 +212,7 @@ class ViewController : UIViewController, CLLocationManagerDelegate, MKMapViewDel
                 if self.debugOutput == true {
                     self.jsonResult.text = infoToShow
                 }
-
+                
                 // Set the name of the closest cooling station
                 guard let coolingCentreName = self.closestCoolingCentre["name"] else {
                     print("Could not set the cooling centre name.")
@@ -240,10 +240,17 @@ class ViewController : UIViewController, CLLocationManagerDelegate, MKMapViewDel
                         print("Problem setting up the map.")
                         return
                 }
+                
+                // Position the map
                 let coolingCentreCoordinates = CLLocationCoordinate2D(latitude: coolingCentreLatitude, longitude: coolingCentreLongitude + 0.001)
                 self.map.setCenterCoordinate(coolingCentreCoordinates, animated: true)
                 let region = MKCoordinateRegion(center: coolingCentreCoordinates, span: MKCoordinateSpan(latitudeDelta: 0.002, longitudeDelta: 0.002))
                 self.map.setRegion(region, animated: true)
+                
+                // Add a pin at the location of the cooling centre
+                let annotation = MKPointAnnotation()
+                annotation.coordinate = CLLocationCoordinate2D(latitude: coolingCentreLatitude, longitude: coolingCentreLongitude - 0.0001)
+                self.map.addAnnotation(annotation)
                 
             }
             
@@ -371,13 +378,13 @@ class ViewController : UIViewController, CLLocationManagerDelegate, MKMapViewDel
         preamble.text = "Nearest cooling station is"
         preamble.textAlignment = NSTextAlignment.Center
         preamble.numberOfLines = 0   // makes number of lines dynamic
-
+        
         // Required to autolayout this label
         preamble.translatesAutoresizingMaskIntoConstraints = false
         
         // Add the label to the superview
         view.addSubview(preamble)
-
+        
         /*
          * Define preamble label
          */
@@ -394,7 +401,7 @@ class ViewController : UIViewController, CLLocationManagerDelegate, MKMapViewDel
         
         // Add the label to the superview
         view.addSubview(stationName)
-
+        
         /*
          * Further define textview that will show phone number for closest cooling station
          */
@@ -429,7 +436,7 @@ class ViewController : UIViewController, CLLocationManagerDelegate, MKMapViewDel
         
         // Add the label to the superview
         view.addSubview(address)
-
+        
         /*
          * Further define map that will show where the closest cooling centre is
          */
@@ -478,7 +485,7 @@ class ViewController : UIViewController, CLLocationManagerDelegate, MKMapViewDel
             "address": address,
             "theMap": mapContainer,
             "result": jsonResult
-            ]
+        ]
         
         // Define the vertical constraints
         let verticalConstraints = NSLayoutConstraint.constraintsWithVisualFormat(
@@ -498,7 +505,7 @@ class ViewController : UIViewController, CLLocationManagerDelegate, MKMapViewDel
         address.centerHorizontallyInSuperview()
         map.centerHorizontallyInSuperview()
         jsonResult.centerHorizontallyInSuperview()
-
+        
         // Activate all defined constraints
         NSLayoutConstraint.activateConstraints(allConstraints)
         
@@ -546,5 +553,4 @@ class ViewController : UIViewController, CLLocationManagerDelegate, MKMapViewDel
         
     }
     
-
 }
